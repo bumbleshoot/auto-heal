@@ -1,5 +1,5 @@
 /**
- * Auto Heal v0.1.0 (beta) by @bumbleshoot
+ * Auto Heal v0.2.0 (beta) by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -201,61 +201,71 @@ function getTotalStat(stat) {
  * player.
  */
 function healParty() {
+  try {
 
-  // if lvl < 11, cannot cast healing spells
-  if (getUser().stats.lvl < 11) {
-    console.log("Player level " + user.stats.lvl + ", cannot cast healing skills");
-    return;
-  }
+    // if lvl < 11, cannot cast healing spells
+    if (getUser().stats.lvl < 11) {
+      console.log("Player level " + user.stats.lvl + ", cannot cast healing skills");
+      return;
+    }
 
-  let con = getTotalStat("con");
-  let int = getTotalStat("int");
+    let con = getTotalStat("con");
+    let int = getTotalStat("int");
 
-  // if lvl >= 14, cast blessing
-  if (user.stats.lvl >= 14) {
+    // if lvl >= 14, cast blessing
+    if (user.stats.lvl >= 14) {
 
-    // get lowest party member health (excluding player)
-    let lowestMemberHealth = 50;
-    for (member of getMembers()) {
-      if (member._id !== USER_ID && member.stats.hp < lowestMemberHealth) {
-        lowestMemberHealth = member.stats.hp;
+      // get lowest party member health (excluding player)
+      let lowestMemberHealth = 50;
+      for (member of getMembers()) {
+        if (member._id !== USER_ID && member.stats.hp < lowestMemberHealth) {
+          lowestMemberHealth = member.stats.hp;
+        }
+      }
+
+      // calculate number of blessings to cast
+      let healthPerBlessing = (con + int + 5) * 0.04;
+      let numBlessings = Math.min(Math.ceil((50 - lowestMemberHealth) / healthPerBlessing), Math.floor(user.stats.mp / 25));
+
+      // cast blessing
+      if (numBlessings > 0) {
+
+        console.log("Lowest party member health: " + lowestMemberHealth);
+        console.log("Casting Blessing " + numBlessings + " time(s)");
+        
+        for (let i=0; i<numBlessings; i++) {
+          fetch("https://habitica.com/api/v3/user/class/cast/healAll", POST_PARAMS);
+          user.stats.mp -= 25;
+          user.stats.hp += healthPerBlessing;
+        }
+        user.stats.hp = Math.min(user.stats.hp, 50);
+      }
+    
+    // if lvl < 14, cannot cast blessing
+    } else {
+      console.log("Player level " + user.stats.lvl + ", cannot cast Blessing");
+    }
+
+    // calculate number of healing lights to cast
+    let numLights = Math.min(Math.max(Math.ceil((50 - user.stats.hp) / ((con + int + 5) * 0.075)), 0), Math.floor(user.stats.mp / 15));
+
+    // cast healing light
+    if (numLights > 0) {
+
+      console.log("Player health: " + user.stats.hp);
+      console.log("Casting Healing Light " + numLights + " time(s)");
+
+      for (let i=0; i<numLights; i++) {
+        fetch("https://habitica.com/api/v3/user/class/cast/heal", POST_PARAMS);
       }
     }
 
-    // calculate number of blessings to cast
-    let healthPerBlessing = (con + int + 5) * 0.04;
-    let numBlessings = Math.min(Math.ceil((50 - lowestMemberHealth) / healthPerBlessing), Math.floor(user.stats.mp / 25));
-
-    // cast blessing
-    if (numBlessings > 0) {
-
-      console.log("Lowest party member health: " + lowestMemberHealth);
-      console.log("Casting Blessing " + numBlessings + " time(s)");
-      
-      for (let i=0; i<numBlessings; i++) {
-        fetch("https://habitica.com/api/v3/user/class/cast/healAll", POST_PARAMS);
-        user.stats.mp -= 25;
-        user.stats.hp += healthPerBlessing;
-      }
-      user.stats.hp = Math.min(user.stats.hp, 50);
-    }
-  
-  // if lvl < 14, cannot cast blessing
-  } else {
-    console.log("Player level " + user.stats.lvl + ", cannot cast Blessing");
-  }
-
-  // calculate number of healing lights to cast
-  let numLights = Math.min(Math.max(Math.ceil((50 - user.stats.hp) / ((con + int + 5) * 0.075)), 0), Math.floor(user.stats.mp / 15));
-
-  // cast healing light
-  if (numLights > 0) {
-
-    console.log("Player health: " + user.stats.hp);
-    console.log("Casting Healing Light " + numLights + " time(s)");
-
-    for (let i=0; i<numLights; i++) {
-      fetch("https://habitica.com/api/v3/user/class/cast/heal", POST_PARAMS);
-    }
+  } catch (e) {
+    MailApp.sendEmail(
+      Session.getEffectiveUser().getEmail(),
+      DriveApp.getFileById(ScriptApp.getScriptId()).getName() + " failed!",
+      e.stack
+    );
+    throw e;
   }
 }
