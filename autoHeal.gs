@@ -1,5 +1,5 @@
 /**
- * Auto Heal v0.2.3 (beta) by @bumbleshoot
+ * Auto Heal v0.2.4 (beta) by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -171,7 +171,7 @@ function healParty() {
     members = JSON.parse(fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS)).data;
     content = JSON.parse(fetch("https://habitica.com/api/v3/content", GET_PARAMS)).data;
 
-    // if lvl < 11, cannot cast healing spells
+    // if lvl < 11, cannot cast healing skills
     if (user.stats.lvl < 11) {
       console.log("Player level " + user.stats.lvl + ", cannot cast healing skills");
       return;
@@ -180,8 +180,8 @@ function healParty() {
     let con = getTotalStat("con");
     let int = getTotalStat("int");
 
-    // if lvl >= 14, cast blessing
-    if (user.stats.lvl >= 14) {
+    // if lvl >= 14 & in a party with other players
+    if (user.stats.lvl >= 14 && typeof members !== "undefined" && members.length > 1) {
 
       // get lowest party member health (excluding player)
       let lowestMemberHealth = 50;
@@ -209,8 +209,8 @@ function healParty() {
         user.stats.hp = Math.min(user.stats.hp, 50);
       }
     
-    // if lvl < 14, cannot cast blessing
-    } else {
+    // if lvl < 14 or not in a party, nothing to cast
+    } else if (user.stats.lvl < 14) {
       console.log("Player level " + user.stats.lvl + ", cannot cast Blessing");
     }
 
