@@ -1,5 +1,5 @@
 /**
- * Auto Heal v0.2.2 (beta) by @bumbleshoot
+ * Auto Heal v0.2.3 (beta) by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -118,48 +118,6 @@ function fetch(url, params) {
   }
 }
 
-/**
- * getUser()
- * 
- * Fetches user data from the Habitica API if it hasn't already 
- * been fetched during this execution.
- */
- let user;
- function getUser() {
-   if (typeof user === "undefined") {
-     user = JSON.parse(fetch("https://habitica.com/api/v3/user", GET_PARAMS)).data;
-   }
-   return user;
- }
-
- /**
- * getMembers()
- * 
- * Fetches party member data from the Habitica API if it hasn't 
- * already been fetched during this execution.
- */
-let members;
-function getMembers() {
-  if (typeof members === "undefined") {
-    members = JSON.parse(fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS)).data;
-  }
-  return members;
-}
-
- /**
- * getContent()
- * 
- * Fetches content data from the Habitica API if it hasn't already 
- * been fetched during this execution.
- */
-let content;
-function getContent() {
-  if (typeof content === "undefined") {
-    content = JSON.parse(fetch("https://habitica.com/api/v3/content", GET_PARAMS)).data;
-  }
-  return content;
-}
-
  /**
  * getTotalStat(stat)
  * 
@@ -171,18 +129,18 @@ function getTotalStat(stat) {
 
   // INT is easy to calculate with a simple formula
   if (stat == "int") {
-    return (getUser().stats.maxMP - 30) / 2;
+    return (user.stats.maxMP - 30) / 2;
   }
 
   // calculate stat from level, buffs, allocated
-  let levelStat = Math.min(Math.floor(getUser().stats.lvl / 2), 50);
+  let levelStat = Math.min(Math.floor(user.stats.lvl / 2), 50);
   let equipmentStat = 0;
   let buffsStat = user.stats.buffs[stat];
   let allocatedStat = user.stats[stat];
 
   // calculate stat from equipment
   for (equipped of Object.values(user.items.gear.equipped)) {
-    let equipment = getContent().gear.flat[equipped];
+    let equipment = content.gear.flat[equipped];
     if (equipment != undefined) { 
       equipmentStat += equipment[stat];
       if (equipment.klass == user.stats.class || ((equipment.klass == "special") && (equipment.specialClass == user.stats.class))) {
@@ -202,11 +160,18 @@ function getTotalStat(stat) {
  * then casts Healing Light enough times to finish healing the
  * player.
  */
+let user;
+let members;
+let content;
 function healParty() {
   try {
 
+    user = JSON.parse(fetch("https://habitica.com/api/v3/user", GET_PARAMS)).data;
+    members = JSON.parse(fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS)).data;
+    content = JSON.parse(fetch("https://habitica.com/api/v3/content", GET_PARAMS)).data;
+
     // if lvl < 11, cannot cast healing spells
-    if (getUser().stats.lvl < 11) {
+    if (user.stats.lvl < 11) {
       console.log("Player level " + user.stats.lvl + ", cannot cast healing skills");
       return;
     }
@@ -219,7 +184,7 @@ function healParty() {
 
       // get lowest party member health (excluding player)
       let lowestMemberHealth = 50;
-      for (member of getMembers()) {
+      for (member of members) {
         if (member._id !== USER_ID && member.stats.hp < lowestMemberHealth) {
           lowestMemberHealth = member.stats.hp;
         }
