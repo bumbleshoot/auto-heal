@@ -166,6 +166,7 @@ let content;
 function healParty() {
   try {
 
+    // get API data
     user = JSON.parse(fetch("https://habitica.com/api/v3/user", GET_PARAMS)).data;
     members = JSON.parse(fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS)).data;
     content = JSON.parse(fetch("https://habitica.com/api/v3/content", GET_PARAMS)).data;
