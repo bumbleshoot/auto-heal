@@ -1,5 +1,5 @@
 /**
- * Auto Heal v0.2.5 (beta) by @bumbleshoot
+ * Auto Heal v1.0.0 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal

@@ -1,5 +1,3 @@
-***Auto Heal is currently in beta. I need beta testers to try it out and let me know if they run into any bugs. There are still some edge cases that haven't been tested yet, so there's a small chance you will see an error while using it. If you're not okay with this, best to wait until Version 1 is released!***
-
 ## Summary
 Auto Heal is an automation script for Habitica that casts healing skills (Blessing & Healing Light) every 15 mins as needed to heal the player & their party. The script checks the health of the player & each party member before casting, so no mana is wasted. This script only works for healers.
 
