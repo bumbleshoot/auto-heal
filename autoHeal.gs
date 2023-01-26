@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.2 by @bumbleshoot
+ * Auto Heal v1.0.3 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -35,7 +35,7 @@ function install() {
 }
  
 function uninstall() {
-  for (trigger of ScriptApp.getProjectTriggers()) {
+  for (let trigger of ScriptApp.getProjectTriggers()) {
     ScriptApp.deleteTrigger(trigger);
   }
 }
@@ -159,7 +159,7 @@ function getTotalStat(stat) {
   let allocatedStat = user.stats[stat];
 
   // calculate stat from equipment
-  for (equipped of Object.values(user.items.gear.equipped)) {
+  for (let equipped of Object.values(user.items.gear.equipped)) {
     let equipment = content.gear.flat[equipped];
     if (equipment != undefined) { 
       equipmentStat += equipment[stat];
@@ -205,7 +205,7 @@ function healParty() {
 
       // get lowest party member health (excluding player)
       let lowestMemberHealth = 50;
-      for (member of members) {
+      for (let member of members) {
         if (member._id !== USER_ID && member.stats.hp < lowestMemberHealth) {
           lowestMemberHealth = member.stats.hp;
         }
