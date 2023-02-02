@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.5 by @bumbleshoot
+ * Auto Heal v1.0.6 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -67,6 +67,10 @@ function validateConstants() {
         valid = false;
       }
     }
+  }
+
+  if (!valid) {
+    console.log("Please fix the above errors and run the install function again.");
   }
 
   return valid;
