@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.6 by @bumbleshoot
+ * Auto Heal v1.0.7 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -256,6 +256,7 @@ function healParty() {
       DriveApp.getFileById(ScriptApp.getScriptId()).getName() + " failed!",
       e.stack
     );
+    console.error(e.stack);
     throw e;
   }
 }
