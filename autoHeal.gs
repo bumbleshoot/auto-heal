@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.7 by @bumbleshoot
+ * Auto Heal v1.0.8 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -26,7 +26,16 @@ const POST_PARAMS = Object.assign({ "method": "post" }, PARAMS);
 const scriptProperties = PropertiesService.getScriptProperties();
  
 function install() {
+
+  // if settings are valid
   if (validateConstants()) {
+
+    // delete triggers
+    deleteTriggers()
+
+    // create trigger
+    console.log("Creating trigger...")
+
     ScriptApp.newTrigger("healParty")
       .timeBased()
       .everyMinutes(15)
@@ -35,6 +44,17 @@ function install() {
 }
  
 function uninstall() {
+
+  // delete triggers
+  deleteTriggers()
+
+  console.log("Done!")
+}
+
+function deleteTriggers() {
+
+  console.log("Deleting triggers...")
+
   for (let trigger of ScriptApp.getProjectTriggers()) {
     ScriptApp.deleteTrigger(trigger);
   }
