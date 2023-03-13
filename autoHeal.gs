@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.9 by @bumbleshoot
+ * Auto Heal v1.0.10 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -76,8 +76,7 @@ function validateConstants() {
 
   if (valid) {
     try {
-      let user = JSON.parse(fetch("https://habitica.com/api/v3/user", GET_PARAMS)).data;
-      if (user.stats.class != "healer") {
+      if (getUser().stats.class != "healer") {
         console.log("ERROR: This script only works for healers. Learn more about classes (including how to change your class) here: https://habitica.fandom.com/wiki/Class_System");
         valid = false;
       }
@@ -180,7 +179,7 @@ function getTotalStat(stat) {
 
   // calculate stat from equipment
   for (let equipped of Object.values(user.items.gear.equipped)) {
-    let equipment = content.gear.flat[equipped];
+    let equipment = getContent().gear.flat[equipped];
     if (equipment != undefined) { 
       equipmentStat += equipment[stat];
       if (equipment.klass == user.stats.class || ((equipment.klass == "special") && (equipment.specialClass == user.stats.class))) {
@@ -200,19 +199,11 @@ function getTotalStat(stat) {
  * then casts Healing Light enough times to finish healing the
  * player.
  */
-let user;
-let members;
-let content;
 function healParty() {
   try {
 
-    // get API data
-    user = JSON.parse(fetch("https://habitica.com/api/v3/user", GET_PARAMS)).data;
-    members = JSON.parse(fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS)).data;
-    content = JSON.parse(fetch("https://habitica.com/api/v3/content", GET_PARAMS)).data;
-
     // if lvl < 11, cannot cast healing skills
-    if (user.stats.lvl < 11) {
+    if (getUser().stats.lvl < 11) {
       console.log("Player level " + user.stats.lvl + ", cannot cast healing skills");
       return;
     }
@@ -221,7 +212,7 @@ function healParty() {
     let int = getTotalStat("int");
 
     // if lvl >= 14 & in a party with other players
-    if (user.stats.lvl >= 14 && typeof members !== "undefined" && members.length > 1) {
+    if (user.stats.lvl >= 14 && typeof getMembers() !== "undefined" && members.length > 1) {
 
       // get lowest party member health (excluding player)
       let lowestMemberHealth = 50;
@@ -277,4 +268,88 @@ function healParty() {
     console.error(e.stack);
     throw e;
   }
+}
+
+/**
+ * getUser(updated)
+ * 
+ * Fetches user data from the Habitica API if it hasn't already 
+ * been fetched during this execution, or if updated is set to 
+ * true.
+ */
+let user;
+function getUser(updated) {
+  if (updated || typeof user === "undefined") {
+    for (let i=0; i<3; i++) {
+      user = fetch("https://habitica.com/api/v3/user", GET_PARAMS);
+      try {
+        user = JSON.parse(user).data;
+        if (typeof user.party?._id !== "undefined") {
+          scriptProperties.setProperty("PARTY_ID", user.party._id);
+        }
+        break;
+      } catch (e) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+          continue;
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
+  return user;
+}
+
+/**
+ * getMembers(updated)
+ * 
+ * Fetches party member data from the Habitica API if it hasn't 
+ * already been fetched during this execution, or if updated is 
+ * set to true.
+ */
+let members;
+function getMembers(updated) {
+  if (updated || typeof members === "undefined") {
+    for (let i=0; i<3; i++) {
+      members = fetch("https://habitica.com/api/v3/groups/party/members?includeAllPublicFields=true", GET_PARAMS);
+      try {
+        members = JSON.parse(members).data;
+        break;
+      } catch (e) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+          continue;
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
+  return members;
+}
+
+/**
+ * getContent(updated)
+ * 
+ * Fetches content data from the Habitica API if it hasn't already 
+ * been fetched during this execution, or if updated is set to 
+ * true.
+ */
+let content;
+function getContent(updated) {
+  if (updated || typeof content === "undefined") {
+    for (let i=0; i<3; i++) {
+      content = fetch("https://habitica.com/api/v3/content", GET_PARAMS);
+      try {
+        content = JSON.parse(content).data;
+        break;
+      } catch (e) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+          continue;
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
+  return content;
 }
