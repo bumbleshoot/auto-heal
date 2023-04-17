@@ -1,5 +1,5 @@
 /**
- * Auto Heal v1.0.10 by @bumbleshoot
+ * Auto Heal v1.0.11 by @bumbleshoot
  * 
  * See GitHub page for info & setup instructions:
  * https://github.com/bumbleshoot/auto-heal
@@ -289,7 +289,7 @@ function getUser(updated) {
         }
         break;
       } catch (e) {
-        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position") || e.stack.includes("Expected double-quoted property name in JSON at position"))) {
           continue;
         } else {
           throw e;
@@ -316,7 +316,7 @@ function getMembers(updated) {
         members = JSON.parse(members).data;
         break;
       } catch (e) {
-        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position") || e.stack.includes("Expected double-quoted property name in JSON at position"))) {
           continue;
         } else {
           throw e;
@@ -343,7 +343,7 @@ function getContent(updated) {
         content = JSON.parse(content).data;
         break;
       } catch (e) {
-        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position"))) {
+        if (i < 2 && (e.stack.includes("Unterminated string in JSON") || e.stack.includes("Expected ',' or '}' after property value in JSON at position") || e.stack.includes("Expected double-quoted property name in JSON at position"))) {
           continue;
         } else {
           throw e;
