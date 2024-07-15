@@ -19,15 +19,16 @@ It is highly recommended that you use a desktop computer for this, as some of th
 
 ## Setup Instructions
 It is highly recommended that you use a desktop computer for this, as some of the steps don't work well on mobile. Make sure you read the [Before Installing](#before-installing) section above, and follow the instructions there if applicable!
-1. Click [here](https://script.google.com/home/projects/1vJtM9OZy6zdSnrLTaHuE216WNwBcHwZYDQ5hUpthr151zMFeVwHGsVZH/edit) to go to the Auto Heal script. If you're not already signed into your Google account, you will be asked to sign in.
-2. In the main menu on the left, click on "Overview" (looks like a lowercase letter i inside a circle).
-3. Click the "Make a copy" button (looks like two pages of paper).
-4. At the top of your screen, click on "Copy of Auto Heal". Rename it "Auto Heal" and click the "Rename" button.
-5. Click [here](https://habitica.com/user/settings/api) to open your API Settings. Highlight and copy your User ID (it looks something like this: `35c3fb6f-fb98-4bc3-b57a-ac01137d0847`). In the Auto Heal script, paste your User ID between the quotations where it says `const USER_ID = "";`. It should now look something like this: `const USER_ID = "35c3fb6f-fb98-4bc3-b57a-ac01137d0847";`
-6. On the same page where you copied your User ID, click the "Show API Token" button, and copy your API Token. In the Auto Heal script, paste your API Token between the quotations where it says `const API_TOKEN = "";`. It should now look something like this: `const API_TOKEN = "35c3fb6f-fb98-4bc3-b57a-ac01137d0847";`
-7. Click the "Save project" button near the top of the page (looks like a floppy disk).
-8. Click the drop-down menu to the right of the "Debug" button, near the top of the page. Select "install" from the drop-down.
-9. Click the "Run" button to the left of the "Debug" button. Wait for it to say "Execution completed".
+1. Click [here](https://script.google.com/home/projects/1vJtM9OZy6zdSnrLTaHuE216WNwBcHwZYDQ5hUpthr151zMFeVwHGsVZH?usp=sharing) to go to the Auto Heal script. If you're not already signed into your Google account, you will be asked to sign in.
+2. Click the "Make a copy" button (looks like two pages of paper).
+3. At the top of your screen, click on "Copy of Auto Heal". Rename it "Auto Heal" and click the "Rename" button.
+4. Click [here](https://habitica.com/user/settings/api) to open your API Settings. Highlight and copy your User ID (it looks something like this: `35c3fb6f-fb98-4bc3-b57a-ac01137d0847`). In the Auto Heal script, paste your User ID between the quotations where it says `const USER_ID = "";`. It should now look something like this: `const USER_ID = "35c3fb6f-fb98-4bc3-b57a-ac01137d0847";`
+5. On the same page where you copied your User ID, click the "Show API Token" button, and copy your API Token. In the Auto Heal script, paste your API Token between the quotations where it says `const API_TOKEN = "";`. It should now look something like this: `const API_TOKEN = "35c3fb6f-fb98-4bc3-b57a-ac01137d0847";`
+6. Click the "Save project" button near the top of the page (looks like a floppy disk).
+7. Click the drop-down menu to the right of the "Debug" button, near the top of the page. Select "install" from the drop-down.
+8. Click the "Run" button to the left of the "Debug" button.
+9. (If this is your first time running the script) Click the "Review permissions" button and select your Google account. Click on "Advanced", then "Go to Auto Heal (unsafe)". (Don't worry, it is safe!) Then click "Continue", then "Allow".
+10. Wait for the "Execution completed" message in the Execution Log.
 
 You're all done! If you need to change the settings or uninstall the script at some point, follow the steps below.
 

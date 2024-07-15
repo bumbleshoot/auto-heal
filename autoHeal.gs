@@ -5,8 +5,8 @@
  * https://github.com/bumbleshoot/auto-heal
  */
 
- const USER_ID = "";
- const API_TOKEN = "";
+const USER_ID = "";
+const API_TOKEN = "";
  
 /*************************************\
  *  DO NOT EDIT ANYTHING BELOW HERE  *
